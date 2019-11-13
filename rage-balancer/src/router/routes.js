@@ -1,7 +1,7 @@
 
 const routes = [
   {
-    path: '/',
+    path: '*',
     component: () => import('layouts/RageBalancerLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') }
