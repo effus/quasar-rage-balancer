@@ -1,17 +1,26 @@
-const DefaultMeasure = () => {
-    return {
-        time: null,
-        value: 0,
-        max: 10
-    }
-};
+import Measure from '../../models/Measure.js';
 
 const User = {
+    
     state: {
         storage: null,
         measures: []
     },
+
     getters: {
+        
+        /**
+         * @param {*} state 
+         * @return {number}
+         */
+        getRagePercent: function(state) {
+            let lastMeasure = new Measure();
+            if (state.measures.length > 0) {
+                lastMeasure = state.measures[state.measures.length - 1];
+            }
+            return Math.round(lastMeasure.value / lastMeasure.max * 100);
+        },
+
         /**
          * @return {{
          *  time: String
@@ -23,14 +32,14 @@ const User = {
             if (state.measures.length > 0) {
                 return state.measures[state.measures.length - 1];
             }
-            console.debug('getLastMeasure.default');
-            return DefaultMeasure();
+            return new Measure();
         }
     },
+    
     mutations: {
         NEW_MEASURE: (state) => {
             console.debug('NEW_MEASURE');
-            let measure = DefaultMeasure();
+            let measure = new Measure();
             measure.time = new Date();
             if (state.measures.length > 0) {
                 const lastMeasure = state.measures[state.measures.length - 1];
@@ -48,7 +57,6 @@ const User = {
             state.measures[state.measures.length - 1] = lastMeasure;
         },
         RESET: (state) => {
-            console.debug('RESET');
             state.measures = [];
         }
     },

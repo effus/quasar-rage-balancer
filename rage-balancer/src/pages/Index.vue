@@ -1,15 +1,17 @@
 <template>
   <q-page class="fit">
     <q-bar class="bg-black text-white">
-      <div class="cursor-pointer">Clicks <q-badge label="0">0</q-badge></div>
+      <div class="cursor-pointer">Clicks <q-badge :label="0"></q-badge></div>
       <div class="cursor-pointer">Start new</div>
       <div class="cursor-pointer">Reset</div>
       <div class="cursor-pointer">What?</div>
       <div class="cursor-pointer">LANG</div>
     </q-bar>
-      <q-card class="btn-wrapper" :class="bgQuasarClass">
-        <q-btn label="Rage button" no-wrap size="xl" push :color="rageBtnQuasarColor" @click="onRageBtnClick"></q-btn>
-      </q-card>
+    <q-card class="btn-wrapper" :class="bgQuasarClass">
+      <q-btn label="Rage button" no-wrap size="xl" push :color="rageBtnQuasarColor" @click="onRageBtnClick"></q-btn>
+      {{theme}}
+      [ {{$store.getters.getLastMeasure}} ]
+    </q-card>
   </q-page>
 </template>
 
@@ -35,7 +37,7 @@ export default {
   },
   data: function() {
     return {
-      theme: ''
+      isCoolDown: false
     }
   },
   computed: {
@@ -44,11 +46,21 @@ export default {
     },
     bgQuasarClass: function() {
       return 'grey-1';
+    },
+    theme: function() {
+      let prevPercent = 0;
+      for (let i in RageThemeMapping) {
+        if (this.$store.getters.getRagePercent >= prevPercent && this.$store.getters.getRagePercent <= RageThemeMapping[i].until) {
+          return RageThemeMapping[i].theme;
+        }
+        prevPercent = RageThemeMapping[i].until;
+      }
+      return 'white';
     }
   },
   methods: {
     onRageBtnClick: function() {
-      console.debug('onRageBtnClick');
+      this.$store.dispatch('IncreaseRage');
     }
   }
 }
@@ -71,5 +83,10 @@ export default {
     grid-column-start: 2;
     grid-column-end: 2;
   }
+}
+.cursor-pointer {
+  &:hover {
+    color: #cfcf0f;
+  }  
 }
 </style>
