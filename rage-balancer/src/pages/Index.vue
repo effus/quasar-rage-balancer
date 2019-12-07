@@ -2,14 +2,14 @@
   <q-page class="fit">
     <q-bar class="bg-black text-white">
       <div class="cursor-pointer">Clicks <q-badge :label="0"></q-badge></div>
-      <div class="cursor-pointer">Start new</div>
-      <div class="cursor-pointer">Reset</div>
+      <div class="cursor-pointer" v-on:click="onStartNewClick">Start new</div>
+      <div class="cursor-pointer" v-on:click="onResetClick">Reset</div>
       <div class="cursor-pointer">What?</div>
       <div class="cursor-pointer">LANG</div>
     </q-bar>
     <q-card class="btn-wrapper" :class="bgQuasarClass">
       <q-btn label="Rage button" no-wrap size="xl" push :color="rageBtnQuasarColor" @click="onRageBtnClick"></q-btn>
-      {{theme}}
+      {{bgQuasarClass}}
       [ {{$store.getters.getLastMeasure}} ]
     </q-card>
   </q-page>
@@ -19,15 +19,15 @@
 import {QBtn, QCard, QBar} from 'quasar';
 
 const RageThemeMapping = [
-  {until: 5, theme: 'white'},
-  {until: 15, theme: 'white-white-yellow'},
-  {until: 40, theme: 'white-yellow'},
-  {until: 50, theme: 'white-yellow-yellow'},
-  {until: 55, theme: 'yellow'},
-  {until: 75, theme: 'yellow-orange'},
-  {until: 85, theme: 'yellow-red'},
-  {until: 95, theme: 'red'},
-  {until: 100, theme: 'black'}
+  {until: 5, theme: 'bg-white'},
+  {until: 15, theme: 'bg-red-1'},
+  {until: 40, theme: 'bg-red-3'},
+  {until: 50, theme: 'bg-red-4'},
+  {until: 55, theme: 'bg-red-5'},
+  {until: 75, theme: 'bg-red-9'},
+  {until: 85, theme: 'bg-red-10'},
+  {until: 95, theme: 'bg-brown-10'},
+  {until: 100, theme: 'bg-grey-10'}
 ];
 
 export default {
@@ -45,9 +45,6 @@ export default {
       return 'grey-1 text-black';
     },
     bgQuasarClass: function() {
-      return 'grey-1';
-    },
-    theme: function() {
       let prevPercent = 0;
       for (let i in RageThemeMapping) {
         if (this.$store.getters.getRagePercent >= prevPercent && this.$store.getters.getRagePercent <= RageThemeMapping[i].until) {
@@ -61,6 +58,12 @@ export default {
   methods: {
     onRageBtnClick: function() {
       this.$store.dispatch('IncreaseRage');
+    },
+    onStartNewClick: function() {
+      this.$store.dispatch('NewMeasure');
+    },
+    onResetClick: function() {
+      this.$store.dispatch('ResetStore');
     }
   }
 }
